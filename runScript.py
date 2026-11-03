@@ -2,7 +2,6 @@ import os
 import subprocess
 import multiprocessing
 
-N = 1831  #0.0003 to 0.025 batch size 1
 
 Ncpus = 16
 
@@ -25,6 +24,23 @@ def search(i, which_run):
 def merge(which_run):
 	command = "ldc-gb-merge %s" % which_run
 	subprocess.run([command], shell=True)
+
+
+
+
+#do a first run to identify the number of needed windows
+N = 0
+command = "taskset -c 0 ldc-gb-search even1st 0"
+result = subprocess.run([command], capture_output=True, text=True, check=True, shell=True)
+
+for line in result.stdout.splitlines():
+        l = line.split("total number of windows ")
+        if(len(l) > 1):
+                N = int(l[1])
+
+print(N)
+
+
 
 #run batches in revers order for a better loadbalancing of the cpus
 iterations = list(range(N, -1, -1))

@@ -153,7 +153,6 @@ class GBSearchBlock(BaseBlock):
     def exec(self):
 
         # search
-        Nbatches = 5
         #self.load_orbits()
         #self.load_tdi()
         #self.fgb = self._get_fgb()
@@ -180,6 +179,20 @@ class GBSearchBlock(BaseBlock):
         print(f"config file successfully written to {config_file}")
 
         os.environ["LDC_CONFIG"] = config_file
+
+
+        #do a first run to identify the number of needed windows
+        Nbatches = 0
+        command = "taskset -c 0 ldc-gb-search even1st 0"
+        result = subprocess.run([command], capture_output=True, text=True, check=True, shell=True)
+
+        for line in result.stdout.splitlines():
+            l = line.split("total number of windows ")
+            if(len(l) > 1):
+                Nbatches = int(l[1])
+
+        print("Nbatches: ", Nbatches)
+
 
         iterations = list(range(Nbatches, -1, -1))
 
