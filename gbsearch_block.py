@@ -84,7 +84,7 @@ GBSBLK_ATTRS_DEF = BBLK_ATTRS_DEF | {
     "bsize": 1024,
 
     # Search parameters
-    "data_set": "Mojito",
+    "data_set": "tdi_combined",
     #"dt": 10.0,				#the dt value is already set
     "snr_threshold": 9.0,
     #"tdi_generation": 2,			#the tdi_generation value is already set
